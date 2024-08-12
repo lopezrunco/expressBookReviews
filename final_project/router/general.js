@@ -75,9 +75,13 @@ public_users.get('/author/:author',function (req, res) {
 
   // Create a new object with the filtered results.
   let filtered_books = filtered_keys.reduce((result, key) => {
-    result[key] = books[key]
+    result.push({
+      isbn: key,
+      title: books[key].title,
+      reviews: books[key].reviews
+    })
     return result
-  }, {})
+  }, [])
 
   res.json({"booksbyauthor": filtered_books})
 });
