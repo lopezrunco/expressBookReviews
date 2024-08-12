@@ -9,14 +9,46 @@ const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
 }
 
-const authenticatedUser = (username,password)=>{ //returns boolean
-//write code to check if username and password match the one we have in records.
+const authenticatedUser = (username, password) => {
+  // Check if username and password match the one we have in records.
+  let validUsers = users.filter((user) => {
+    return (user.username === username && user.password === password)
+  })
+
+  // Return true if any user is found.
+  if (validUsers.length > 0) {
+    return true;
+  } else {
+      return false;
+  }
 }
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const username = req.body.username
+  const password = req.body.password
+
+  // Check username or password missing.
+  if (!username || !password) {
+    return res.json({message: "Error loggin in."})
+  }
+
+  if (authenticatedUser(username, password)) {
+    // Generate JWT token.
+    let accessToken = jwt.sign({
+      data: password
+    }, 'access', { expiresIn: 60 })
+    // Store access token & username in session.
+    req.session.authorization = {
+      accessToken,
+      username
+    }
+    return res.send("Customer successfully logged in")
+  } else {
+    return res.json({
+      message: "Invalid loggin. Check username and password."
+    })
+  }
 });
 
 // Add a book review
