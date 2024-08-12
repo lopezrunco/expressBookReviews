@@ -35,7 +35,7 @@ public_users.get('/author/:author',function (req, res) {
   // Iterate the books using the keys and check the author match.
   let filtered_keys = keys.filter((key) => books[key].author === author)
 
-  // Create a new objet with the filtered results.
+  // Create a new object with the filtered results.
   let filtered_books = filtered_keys.reduce((result, key) => {
     result[key] = books[key]
     return result
@@ -46,8 +46,21 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  // Get the title fromn the params.
+  const title = req.params.title
+  // Obtain all the keys for the ‘books’ object.
+  let keys = Object.keys(books)
+
+  // Iterate the books using the keys and check the title match.
+  let filtered_keys = keys.filter((key) => books[key].title === title)
+
+  // Create a new object with the filtered results.
+  let filtered_books = filtered_keys.reduce((result, key) => {
+    result[key] = books[key]
+    return result
+  }, {})
+
+  res.send(filtered_books)
 });
 
 //  Get book review
