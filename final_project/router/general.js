@@ -34,7 +34,7 @@ public_users.post("/register", (req,res) => {
       })
 
       return res.json({
-        message: "User successfully registered."
+        message: "Customer successfully registred. Now you can login"
       })
     } else {
       return res.json({
@@ -50,7 +50,7 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books, null, 4))
+  res.json({"books": books})
 });
 
 // Get book details based on ISBN
@@ -79,7 +79,7 @@ public_users.get('/author/:author',function (req, res) {
     return result
   }, {})
 
-  res.send(filtered_books)
+  res.json({"booksbyauthor": filtered_books})
 });
 
 // Get all books based on title
@@ -98,7 +98,7 @@ public_users.get('/title/:title',function (req, res) {
     return result
   }, {})
 
-  res.send(filtered_books)
+  res.json({"booksbytitle": filtered_books})
 });
 
 //  Get book review
