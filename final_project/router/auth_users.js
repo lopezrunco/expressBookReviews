@@ -53,8 +53,25 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  // Get ISBN from params and find the match in the books.
+  const isbn = req.params.isbn
+  let book = books[isbn]
+
+  if (book) {
+    // Get the review and the user information.
+    let review = req.query.review
+    const { username } = req.session.authorization
+
+    // If username & review both exists, update the review.
+    if (username && review) {
+      book.reviews[username] = review
+    } else {
+      res.send('Unable to update. Username or review not provided.')
+    }
+    res.send(`The review for the book with ISBN ${isbn} has been added/updated.`)
+  } else {
+    res.send("Unable to find the book.");
+  }
 });
 
 module.exports.authenticated = regd_users;
