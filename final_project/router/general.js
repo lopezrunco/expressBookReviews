@@ -50,7 +50,17 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.json({"books": books})
+  const getAllBooks = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(books)
+    }, 100);
+  })
+
+  getAllBooks.then(data => {
+      res.json({"books": data})
+    }).catch(error => {
+      res.json({ "error": "Unable to get all the books." })
+    })
 });
 
 // Get book details based on ISBN
