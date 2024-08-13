@@ -113,25 +113,33 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  // Get the title fromn the params.
-  const title = req.params.title
-  // Obtain all the keys for the ‘books’ object.
-  let keys = Object.keys(books)
+  const getBooksByTitle = new Promise((resolve, reject) => {
+    // Get the title fromn the params.
+    const title = req.params.title
+    // Obtain all the keys for the ‘books’ object.
+    let keys = Object.keys(books)
 
-  // Iterate the books using the keys and check the title match.
-  let filtered_keys = keys.filter((key) => books[key].title === title)
+    // Iterate the books using the keys and check the title match.
+    let filtered_keys = keys.filter((key) => books[key].title === title)
 
-  // Create a new object with the filtered results.
-  let filtered_books = filtered_keys.reduce((result, key) => {
-    result.push({
-      isbn: key,
-      author: books[key].author,
-      reviews: books[key].reviews
-    })
-    return result
-  }, [])
+    // Create a new object with the filtered results.
+    let filtered_books = filtered_keys.reduce((result, key) => {
+      result.push({
+        isbn: key,
+        author: books[key].author,
+        reviews: books[key].reviews
+      })
+      return result
+    }, [])
 
-  res.json({"booksbytitle": filtered_books})
+    resolve(filtered_books)
+  })
+
+  getBooksByTitle.then(data => {
+    res.json({"booksbytitle": data})
+  }).catch(error => {
+    res.json({ "Error: Unable to get books by title": error })
+  })
 });
 
 //  Get book review
